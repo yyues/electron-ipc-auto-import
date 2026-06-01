@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/yyues/electron-ipc-auto-import/compare/v1.1.1...v1.1.2) (2026-06-01)
+
+
+### Bug Fixes
+
+* update publishConfig to use npmjs registry ([6080cb9](https://github.com/yyues/electron-ipc-auto-import/commit/6080cb95558849944d41caba0c08a422f09dfc75))
+
 ## [1.1.1](https://github.com/yyues/electron-ipc-auto-import/compare/v1.1.0...v1.1.1) (2026-06-01)
 
 
