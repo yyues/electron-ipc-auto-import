@@ -1,0 +1,26 @@
+{
+  "name": "playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Electron playground for debugging electron-ipc-auto-import end-to-end (main + preload + renderer).",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev --sourcemap",
+    "debug": "electron-vite dev --inspect-brk=9229 --sourcemap",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "electron-ipc-auto-import": "workspace:*",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "electron": "^33.0.0",
+    "electron-vite": "^5.0.0",
+    "vite": "^7.0.0",
+    "vue-tsc": "^2.2.0"
+  }
+}

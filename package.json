@@ -1,0 +1,117 @@
+{
+  "name": "electron-ipc-auto-import",
+  "version": "0.1.0",
+  "description": "An Electron plugin for automatically discovering and registering type-safe IPC handlers, inspired by unplugin-auto-import.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "electron",
+    "ipc",
+    "unplugin",
+    "vite",
+    "webpack",
+    "auto-import",
+    "type-safe",
+    "contextBridge"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
+    },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "import": "./dist/webpack.js",
+      "require": "./dist/webpack.cjs"
+    },
+    "./rspack": {
+      "types": "./dist/rspack.d.ts",
+      "import": "./dist/rspack.js",
+      "require": "./dist/rspack.cjs"
+    },
+    "./esbuild": {
+      "types": "./dist/esbuild.d.ts",
+      "import": "./dist/esbuild.js",
+      "require": "./dist/esbuild.cjs"
+    },
+    "./rollup": {
+      "types": "./dist/rollup.d.ts",
+      "import": "./dist/rollup.js",
+      "require": "./dist/rollup.cjs"
+    },
+    "./runtime/main": {
+      "types": "./dist/runtime/main.d.ts",
+      "import": "./dist/runtime/main.js",
+      "require": "./dist/runtime/main.cjs"
+    },
+    "./runtime/preload": {
+      "types": "./dist/runtime/preload.d.ts",
+      "import": "./dist/runtime/preload.js",
+      "require": "./dist/runtime/preload.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
+    },
+    "./client": {
+      "types": "./client.d.ts"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "client.d.ts"
+  ],
+  "scripts": {
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit && pnpm -r --if-present --filter=\"!electron-ipc-auto-import\" typecheck",
+    "playground": "pnpm --filter playground dev",
+    "playground:debug": "pnpm --filter playground debug",
+    "example:vite": "pnpm --filter example-electron-vite-app build",
+    "example:webpack": "pnpm --filter example-electron-webpack-app build",
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.4.0",
+    "tinyglobby": "^0.2.17",
+    "ts-morph": "^28.0.0",
+    "unplugin": "^3.0.0"
+  },
+  "peerDependencies": {
+    "electron": "*",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^25.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.7"
+  },
+  "packageManager": "pnpm@10.6.3",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}
