@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/yyues/electron-ipc-auto-import/compare/v1.1.0...v1.1.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* update publishConfig to set access to public ([db31665](https://github.com/yyues/electron-ipc-auto-import/commit/db31665eb6e494ec8545cd36ce9de0a0e0b8364b))
+
 # [1.1.0](https://github.com/yyues/electron-ipc-auto-import/compare/v1.0.0...v1.1.0) (2026-06-01)
 
 
