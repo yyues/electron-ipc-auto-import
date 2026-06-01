@@ -14,6 +14,15 @@
     "type-safe",
     "contextBridge"
   ],
+  "author": "yyues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yyues/electron-ipc-auto-import.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yyues/electron-ipc-auto-import/issues"
+  },
+  "homepage": "https://github.com/yyues/electron-ipc-auto-import#readme",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -104,7 +113,6 @@
     "typescript": "^5.7.0",
     "vitest": "^4.1.7"
   },
-  "packageManager": "pnpm@10.6.3",
   "engines": {
     "node": ">=18.0.0"
   },
