@@ -1,6 +1,6 @@
 {
   "name": "electron-ipc-auto-import",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "An Electron plugin for automatically discovering and registering type-safe IPC handlers, inspired by unplugin-auto-import.",
   "type": "module",
   "license": "MIT",
