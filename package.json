@@ -1,6 +1,6 @@
 {
   "name": "electron-ipc-auto-import",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An Electron plugin for automatically discovering and registering type-safe IPC handlers, inspired by unplugin-auto-import.",
   "type": "module",
   "license": "MIT",
@@ -122,5 +122,8 @@
       "electron",
       "esbuild"
     ]
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
