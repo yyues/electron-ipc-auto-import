@@ -1,34 +1,34 @@
 name: Release
 
+# Triggered only when a GitHub Release is published. The release tag (e.g. v1.2.0)
+# is the source of truth for the version: we bump package.json to match, push the
+# bump back to main, and publish to npm.
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
 
 permissions:
-  contents: write # create tags / releases, push the changelog commit back
-  issues: write # semantic-release comments on related issues/PRs
-  pull-requests: write
+  contents: write # push the version-bump commit back to main
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
-  release:
-    # The write-back commit carries [skip ci]; skip self re-triggering (belt and braces).
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # semantic-release needs full tag/commit history
+          ref: main # commit the bump onto the branch, not the detached release tag
+          fetch-depth: 0
           persist-credentials: true
 
       - uses: pnpm/action-setup@v4 # reads packageManager (pnpm@10.6.3) from package.json
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22 # semantic-release@25 requires Node ^22.14 || >=24.10
+          node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
@@ -43,9 +43,23 @@ jobs:
       - name: Build dist
         run: pnpm build
 
-      - name: Release
-        run: pnpm exec semantic-release
+      - name: Resolve version from release tag
+        id: ver
+        run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+
+      - name: Bump package.json
+        run: npm version "${{ steps.ver.outputs.version }}" --no-git-tag-version --allow-same-version
+
+      - name: Commit version bump back to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): ${{ steps.ver.outputs.version }} [skip ci]"
+          git push origin main
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

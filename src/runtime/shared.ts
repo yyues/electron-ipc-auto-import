@@ -65,6 +65,21 @@ function safeStringify(value: unknown): string {
   try {
     return JSON.stringify(value)
   } catch {
+    // A field (circular ref, BigInt, …) broke serialization. Degrade to the
+    // core error fields so name/message/stack still survive the round-trip,
+    // rather than collapsing the whole payload into a generic message.
+    if (value && typeof value === 'object') {
+      const v = value as Record<string, unknown>
+      try {
+        return JSON.stringify({
+          name: typeof v.name === 'string' ? v.name : 'Error',
+          message: typeof v.message === 'string' ? v.message : String(v.message ?? ''),
+          ...(typeof v.stack === 'string' ? { stack: v.stack } : {}),
+        })
+      } catch {
+        // fall through to the generic payload below
+      }
+    }
     return JSON.stringify({ name: 'Error', message: 'Unserializable error' })
   }
 }

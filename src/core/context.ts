@@ -22,8 +22,6 @@ export interface GeneratedShape {
   main: string
   preload: string
   dts: string
-  /** Hash of the runtime-relevant shape (channels + namespaces). */
-  shapeHash: string
 }
 
 /**
@@ -109,11 +107,8 @@ export class IpcContext {
     const main = generateMainModule(manifest, this.options)
     const preload = generatePreloadModule(manifest, this.options)
     const dts = generateDts(manifest, this.options)
-    const shapeHash = hash(
-      manifest.map((e) => `${e.channel}|${e.namespace}.${e.exportName}`).join(';'),
-    )
 
-    this.generated = { manifest, main, preload, dts, shapeHash }
+    this.generated = { manifest, main, preload, dts }
     return this.generated
   }
 

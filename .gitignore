@@ -5,3 +5,6 @@ out/
 
 # Generated IPC type declarations
 **/ipc-auto-import.d.ts
+
+
+.tsup

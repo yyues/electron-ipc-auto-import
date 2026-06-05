@@ -50,4 +50,25 @@ describe('error round-trip', () => {
     expect(payload.message).toBe('m')
     expect(payload.detail).toEqual({ a: 1 })
   })
+
+  it('degrades gracefully when a custom field is unserializable', () => {
+    // A circular custom field breaks JSON.stringify; core fields must survive.
+    const err = new Error('still here') as Error & { self?: unknown }
+    err.name = 'CircularError'
+    err.self = err
+
+    const restored = decodeErrorMessage(encodeErrorMessage(err))
+    expect(restored?.name).toBe('CircularError')
+    expect(restored?.message).toBe('still here')
+    expect(typeof restored?.stack).toBe('string')
+    expect((restored as unknown as { self?: unknown }).self).toBeUndefined()
+  })
+
+  it('falls back to a generic payload for non-object unserializable values', () => {
+    // A bare BigInt cannot be JSON-stringified and carries no error fields.
+    const encoded = encodeErrorMessage(0n, (err) => err)
+    const restored = decodeErrorMessage(encoded)
+    expect(restored?.name).toBe('Error')
+    expect(restored?.message).toBe('Unserializable error')
+  })
 })

@@ -134,8 +134,32 @@ module.exports = {
 | `pathStyle` | `'relative' \| 'absolute' \| 'alias'` | `'relative'` | dts 内 import 路径写法（`relative` 跨机器可移植，推荐） |
 | `failOnCollision` | `boolean` | `true` | 冲突的 channel / bridge key 直接报错 |
 | `allowDefault` | `boolean` | `false` | 是否把 `export default` 也作为 handler |
+
+## 运行时选项
+
+`validate` 和 `serializeError` 是**运行时**选项——它们持有闭包（通常还要 import
+zod / valibot），所以在主进程注册 handler 时传入，而不是写在打包器配置里：
+
+```ts
+import { registerIpcHandlers } from 'virtual:electron-ipc/main'
+
+registerIpcHandlers({
+  // 主进程派发前校验/改写渲染端参数；返回新数组替换，或 throw 拒绝。
+  validate(channel, args) {
+    if (channel === 'user:getUser') userIdSchema.parse(args[0])
+  },
+  // 自定义回传渲染端的错误载荷（默认 {name,message,stack,...自定义字段}）。
+  serializeError(err) {
+    return { name: 'Error', message: String(err) } // 例如生产环境剥离 stack
+  },
+})
+```
+
+| 运行时选项 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `eventArg` | `boolean` | 跟随 `eventArg` 插件选项 | 把 `IpcMainInvokeEvent` 作为 handler 第一个参数 |
 | `validate` | `(channel, args) => args \| void` | — | 主进程派发前校验/改写参数 |
-| `serializeError` | `(err) => unknown` | `{name,message,stack,code}` | 错误回传到渲染端的载荷 |
+| `serializeError` | `(err) => unknown` | `{name,message,stack,...自定义字段}` | 错误回传到渲染端的载荷 |
 
 ## 检测规则
 

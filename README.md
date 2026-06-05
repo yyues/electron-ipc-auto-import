@@ -118,8 +118,34 @@ Other bundlers: import from `electron-ipc-auto-import/webpack`, `/rspack`,
 | `pathStyle` | `'relative' \| 'absolute' \| 'alias'` | `'relative'` | How specifiers are written into the dts (keep `relative` for portable diffs) |
 | `failOnCollision` | `boolean` | `true` | Error on duplicate channels / bridge keys |
 | `allowDefault` | `boolean` | `false` | Include `export default` handlers |
+
+## Runtime options
+
+`validate` and `serializeError` are **runtime** options — they hold closures
+(and usually imports like zod/valibot), so they're passed when you register the
+handlers in the main process, not in the bundler config:
+
+```ts
+import { registerIpcHandlers } from 'virtual:electron-ipc/main'
+
+registerIpcHandlers({
+  // Validate/transform renderer args in main before dispatch.
+  // Return a new args array to replace them, or throw to reject.
+  validate(channel, args) {
+    if (channel === 'user:getUser') userIdSchema.parse(args[0])
+  },
+  // Customize the error payload sent to the renderer (default: {name,message,stack,...customFields}).
+  serializeError(err) {
+    return { name: 'Error', message: String(err) } // e.g. strip stack in production
+  },
+})
+```
+
+| Runtime option | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `eventArg` | `boolean` | mirrors the `eventArg` plugin option | Pass `IpcMainInvokeEvent` as the first handler arg |
 | `validate` | `(channel, args) => args \| void` | — | Validate/transform args in main before dispatch |
-| `serializeError` | `(err) => unknown` | `{name,message,stack,code}` | Error payload sent to the renderer |
+| `serializeError` | `(err) => unknown` | `{name,message,stack,...customFields}` | Error payload sent to the renderer |
 
 ## Detection rules
 
